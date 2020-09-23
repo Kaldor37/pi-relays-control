@@ -1,0 +1,2 @@
+recursive-include pi_relays_control/templates *
+recursive-include pi_relays_control/static *

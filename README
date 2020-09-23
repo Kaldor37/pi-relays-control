@@ -1,0 +1,3 @@
+Raspberry Pi relays board control interface
+Can control a 3 relays GPIO board (and maybe some other boards with more or less relays)
+One GPIO channel per relay
