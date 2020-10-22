@@ -1,0 +1,17 @@
+{% include 'header.html' %}
+
+<div class="row btn-row">
+    <div class="col text-center">
+        <form method="POST">
+            <button
+                type="submit"
+                class="btn btn-lg btn-{% if user %}success{% else %}primary{% endif %} btn-block"
+                {% if user %}disabled{% endif %}
+            >
+                {% if user %}User access waiting approval{% else %}Request user access{% endif %}
+            </button>
+        </form>
+    </div>
+</div>
+
+{% include 'footer.html' %}

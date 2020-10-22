@@ -23,4 +23,10 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#userEditModal').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget);
+        $('#inputUserName').val(button.data('user-name'));
+        $('#inputUserId').val(button.data('user-id'));
+    });
 });

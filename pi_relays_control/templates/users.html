@@ -1,0 +1,100 @@
+{% set page = 'users' %}
+{% include 'header.html' %}
+
+<div class="table-responsive mt-3">
+    <table class="table table-bordered table-hover table-dark table-sm">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Registration</th>
+                <th class="text-center">Registered</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usr in users %}
+            <tr {% if usr.admin %}class="bg-primary"{% elif not usr.access_granted %}class="bg-warning"{% endif %}>
+                <td>
+                    {{usr.name or 'Unkown'}}
+                </td>
+                <td>
+                    {{usr.registration_ip}} / {{usr.registration_user_agent}}
+                </td>
+                <td class="text-center">{{usr.registered}}</td>
+                <td class="text-center">
+                    <form method="post">
+                        <input type="hidden" name="user_id" value="{{usr.id}}"/>
+                        {% if not usr.access_granted %}
+                            <button class="btn btn-light btn-sm" title="Grant access" type="submit" value="grant" name="action">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
+                                </svg>
+                            </button>
+                        {% else %}
+                            <button class="btn btn-light btn-sm" title="Remoke access" type="submit" value="revoke" name="action">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                  <path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </button>
+                            {% if usr.admin %}
+                                <button class="btn btn-light btn-sm" title="Downgrade access" type="submit" value="downgrade" name="action">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-down-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
+                                    </svg>
+                                </button>
+                            {% else %}
+                                <button class="btn btn-light btn-sm" title="Upgrade access" type="submit" value="upgrade" name="action">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-up-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                        <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+                                    </svg>
+                                </button>
+                            {% endif %}
+                        {% endif %}
+                        <button
+                            class="btn btn-light btn-sm"
+                            title="Edit"
+                            type="button"
+                            data-toggle="modal" data-target="#userEditModal"
+                            data-user-id="{{usr.id}}"
+                            data-user-name="{{usr.name or ''}}"
+                        >
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                            </svg>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="userEditModal" tabindex="-1" role="dialog" aria-labelledby="userEditModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post">
+                <input type="hidden" id="inputUserId" name="user_id" value=""/>
+                <div class="modal-header">
+                    <h5 class="modal-title">User edit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="inputUserName" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="inputUserName" name="user_name"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" name="action" value="editName">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% include 'footer.html' %}
